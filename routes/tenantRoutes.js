@@ -6,7 +6,7 @@ import {
   getTenantById,
   updateTenantById,
   deleteTenantById,
-} from "../controllers/TenantController.js";
+} from "../controllers/tenantController.js";
 
 const router = express.Router();
 

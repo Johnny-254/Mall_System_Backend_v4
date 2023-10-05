@@ -6,22 +6,55 @@ import db from "../models/index.js";
 // User Authorization
 const User = db.User;
 
+// Admin Authorization
+const Admin = db.Admin;
+
 const login = async (req, res, next) => {
   const { username, password } = req.body;
   try {
+    // Check the 'users' table
     const user = await User.findOne({ where: { username: username } });
-    if (!user) {
-      res.status(401).json({ message: "Invalid username or password" });
+
+    // Check the 'admins' table
+    const admin = await Admin.findOne({ where: { username: username } });
+
+    if (!user && !admin) {
+      res.status(401).json({
+        authenticated: false,
+        message: "Invalid username or password",
+      });
     } else {
-      const result = await bcrypt.compare(password, user.password);
-      if (result) {
-        const token = jwt.sign({ id: user.id }, "secret_jwt", {
-          expiresIn: "1hr",
-        });
-        res.json({ token: token });
-      } else {
-        res.status(401).json({ message: "Invalid username or password" });
+      // First, check if it's a user
+      if (user) {
+        const result = await bcrypt.compare(password, user.password);
+        if (result) {
+          const token = jwt.sign({ id: user.id }, "secret_jwt", {
+            expiresIn: "1hr",
+          });
+
+          res.json({ authenticated: true, token: token, userType: "customer" });
+          return; // Exit the function
+        }
       }
+
+      // Then, check if it's an admin
+      if (admin) {
+        const adminResult = await bcrypt.compare(password, admin.password);
+        if (adminResult) {
+          const token = jwt.sign({ id: admin.id }, "secret_jwt", {
+            expiresIn: "1hr",
+          });
+
+          res.json({ authenticated: true, token: token, userType: "admin" });
+          return; // Exit the function
+        }
+      }
+
+      // If neither user nor admin credentials match
+      res.status(401).json({
+        authenticated: false,
+        message: "Invalid username or password",
+      });
     }
   } catch (error) {
     next(error);

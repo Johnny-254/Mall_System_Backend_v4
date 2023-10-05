@@ -20,6 +20,10 @@ const User = (sequelize, Sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       deletedAt: {
         type: DataTypes.DATEONLY,
         allowNull: true,

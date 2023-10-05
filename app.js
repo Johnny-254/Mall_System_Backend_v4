@@ -8,6 +8,7 @@ import staffRoutes from "./routes/staffRoutes.js";
 import stallRoutes from "./routes/stallRoutes.js";
 import tenantRoutes from "./routes/tenantRoutes.js";
 import authRoutes from "./routes/authRotes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 import errorHandler from "./middlewares/errorHandler.js";
 
@@ -32,6 +33,7 @@ sequelize
   });
 
 app.use("/api/v1", userRoutes);
+app.use("/api/v1", adminRoutes);
 app.use("/api/v1", deptRoutes);
 app.use("/api/v1", staffRoutes);
 app.use("/api/v1", stallRoutes);

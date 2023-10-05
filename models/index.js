@@ -10,6 +10,9 @@ db.sequelize = sequelize;
 import User from "./User.js";
 db.User = User(sequelize, Sequelize);
 
+import Admin from "./Admin.js";
+db.Admin = Admin(sequelize, Sequelize);
+
 import Dept from "./Dept.js";
 db.Dept = Dept(sequelize, Sequelize);
 
