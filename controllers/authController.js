@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import db from "../models/index.js";
+import sendEmail from "../middlewares/emailHandler.js";
+import { where } from "sequelize";
 
 // User Authorization
 const User = db.User;
@@ -33,7 +35,10 @@ const login = async (req, res, next) => {
           });
 
           res.json({ authenticated: true, token: token, userType: "customer" });
-          return; // Exit the function
+
+          // if (!token) return res.status(400).send({ message: "Invalid link" });
+
+          return;
         }
       }
 
@@ -46,7 +51,7 @@ const login = async (req, res, next) => {
           });
 
           res.json({ authenticated: true, token: token, userType: "admin" });
-          return; // Exit the function
+          return;
         }
       }
 
@@ -89,13 +94,18 @@ const signup = async (req, res, next) => {
     const token = jwt.sign({ id: user.id }, "secret_key", {
       expiresIn: "1hr",
     });
-    res.json({ token: token });
+
+    const url = `${process.env.BASE_URL}users/${user.id}/verify/${token}`;
+    await sendEmail(user.email, "Verify Email", url);
+
+    if (token) {
+      await User.update({ email_verified: true }, { where: { id: user.id } });
+    }
+    res.status(200).send({ message: "Email verified successfully" });
+    res.json({ authenticated: true, token: token, userType: "customer" });
   } catch (error) {
     next(error);
   }
 };
-
-// Staff Authorization
-// const Staff = db.Staff;
 
 export { login, signup };

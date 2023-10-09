@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.get("/staffs", getAllStaff);
+router.get("/staff", getAllStaff);
 
 router.get("/staff/:id", getStaffById);
 

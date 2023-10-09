@@ -14,15 +14,11 @@ const User = (sequelize, Sequelize) => {
       },
       email_verified: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        defaultValue: false,
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
       },
       deletedAt: {
         type: DataTypes.DATEONLY,
