@@ -95,13 +95,13 @@ const signup = async (req, res, next) => {
       expiresIn: "1hr",
     });
 
-    const url = `${process.env.BASE_URL}users/${user.id}/verify/${token}`;
+    const url = `${process.env.BASE_URL}/user/${user.id}/verify/${token}`;
     await sendEmail(user.email, "Verify Email", url);
 
     if (token) {
       await User.update({ email_verified: true }, { where: { id: user.id } });
     }
-    res.status(200).send({ message: "Email verified successfully" });
+    // res.status(200).send({ message: "Email verified successfully" });
     res.json({ authenticated: true, token: token, userType: "customer" });
   } catch (error) {
     next(error);

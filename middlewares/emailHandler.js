@@ -11,6 +11,9 @@ const sendEmail = async (email, subject, text) => {
         user: process.env.USER,
         pass: process.env.PASS,
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
 
     await transporter.sendMail({
@@ -19,6 +22,7 @@ const sendEmail = async (email, subject, text) => {
       subject: subject,
       text: text,
     });
+    console.log(text);
     console.log("email sent successfully");
   } catch (error) {
     console.log("email not sent!");
